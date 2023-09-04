@@ -8,6 +8,9 @@ $stmt = $pdo->prepare('SELECT * FROM books WHERE id = :id');
 $stmt->execute(['id' => $id]);
 $book = $stmt->fetch();
 
+$stmt = $pdo->prepare('SELECT * FROM book_authors ba LEFT JOIN authors a ON a.id=ba.author_id WHERE book_id=:book_id;');
+$stmt->execute(['book_id' => $id]);
+
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +22,24 @@ $book = $stmt->fetch();
 </head>
 <body>
     <h1><?= $book['title']; ?></h1>
+    <ul>
+
+<?php
+    while ( $author = $stmt->fetch() ) {
+?>
+
+        <li><?= $author['first_name']; ?> <?= $author['last_name']; ?></li>
+
+<?php
+    }
+?>
+    </ul>
     <img src="<?= $book['cover_path']; ?>">
     <p>Hind: <?= round($book['price'], 2); ?> €</p>
+
+    <form action="delete.php" method="post" id="delete">
+        <input type="hidden" name="id" value="<?= $id; ?>">
+        <button form="delete">Kustuta</button>
+    </form>
 </body>
 </html>

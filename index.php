@@ -1,23 +1,22 @@
 <?php
 
-$myData = [
-    'first_name' => 'Andrus',
-    'last_name' => 'Naulainen',
-    'location' => 'Kudjape'
-];
+require_once('./connection.php');
 
-echo "<pre>";
+$stmt = $pdo->query('SELECT * FROM books WHERE is_deleted<>1');
 
-$i = 0;
+echo "<ul>";
 
-foreach ( $myData as $key => $value ) {
+while ( $row = $stmt->fetch() )
+{
+?>
 
-    $value = strtoupper($value);
+    <li>
+        <a href="./book.php?id=<?= $row['id']; ?>">
+            <?= $row['title']; ?>
+        </a>
+    </li>
 
-    echo "{$key}: " . $value . "\n";
+<?php
+}
 
-};
-
-var_dump($myData);
-
-echo "</pre>";
+echo "</ul>";
